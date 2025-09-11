@@ -16,11 +16,21 @@ class Account {
     }
 
     void deposit(double amount) {
-        balance += amount;
+        if (amount > 0) {
+            balance += amount;
+            System.out.println("Deposited.");
+        } else {
+            System.out.println("Invalid Amount.");
+        }
     }
 
     void withdraw(double amount) {
-        balance -= amount;
+        if (amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrawn.");
+        } else {
+            System.out.println("Insufficient Balance.");
+        }
     }
 
     void display() {
@@ -28,7 +38,7 @@ class Account {
         System.out.println("Name: " + name);
         System.out.println("Balance: " + balance);
         System.out.println("Email: " + email);
-        System.out.println("Phone: " + phone);
+        System.out.println("Phone: " + phone); 
     }
 
     void updateContact(String email, String phone) {
@@ -37,7 +47,7 @@ class Account {
     }
 }
 
-public class Main {
+public class main {
     static Account[] accounts = new Account[100];
     static int count = 0;
     static int nextAccNo = 1001;
@@ -53,53 +63,66 @@ public class Main {
     static void createAccount() {
         System.out.print("Enter Name: ");
         String name = sc.nextLine();
+
         System.out.print("Enter Initial Deposit: ");
         double bal = sc.nextDouble(); sc.nextLine();
+
         System.out.print("Enter Email: ");
         String email = sc.nextLine();
+
         System.out.print("Enter Phone: ");
         String phone = sc.nextLine();
+
         accounts[count++] = new Account(nextAccNo, name, bal, email, phone);
         System.out.println("Account Created. Number: " + nextAccNo);
         nextAccNo++;
     }
 
-    static void deposit() {
+    static void deposit() { 
         System.out.print("Enter Account No: ");
         int accNo = sc.nextInt(); sc.nextLine();
         int i = find(accNo);
+
         if (i != -1) {
             System.out.print("Enter Amount: ");
             double amt = sc.nextDouble(); sc.nextLine();
             accounts[i].deposit(amt);
-            System.out.println("Deposited.");
-        } else System.out.println("Not Found.");
+        } else {
+            System.out.println("Not Found.");
+        }
     }
-
-    static void withdraw() {
+ 
+    static void withdraw() { 
         System.out.print("Enter Account No: ");
         int accNo = sc.nextInt(); sc.nextLine();
         int i = find(accNo);
+
         if (i != -1) {
             System.out.print("Enter Amount: ");
             double amt = sc.nextDouble(); sc.nextLine();
             accounts[i].withdraw(amt);
-            System.out.println("Withdrawn.");
-        } else System.out.println("Not Found.");
+        } else {
+            System.out.println("Not Found.");
+        }
     }
 
     static void show() {
         System.out.print("Enter Account No: ");
         int accNo = sc.nextInt(); sc.nextLine();
         int i = find(accNo);
-        if (i != -1) accounts[i].display();
-        else System.out.println("Not Found.");
+
+        if (i != -1) {
+            accounts[i].display();
+        } else {
+            System.out.println("Not Found.");
+        }
     }
 
     static void update() {
         System.out.print("Enter Account No: ");
         int accNo = sc.nextInt(); sc.nextLine();
         int i = find(accNo);
+        
         if (i != -1) {
             System.out.print("Enter New Email: ");
             String email = sc.nextLine();
@@ -107,7 +130,9 @@ public class Main {
             String phone = sc.nextLine();
             accounts[i].updateContact(email, phone);
             System.out.println("Updated.");
-        } else System.out.println("Not Found.");
+        } else {
+            System.out.println("Not Found.");
+        }
     }
 
     public static void main(String[] args) {
@@ -120,6 +145,7 @@ public class Main {
             System.out.println("6. Exit");
             System.out.print("Choice: ");
             int ch = sc.nextInt(); sc.nextLine();
+
             switch (ch) {
                 case 1: createAccount(); break;
                 case 2: deposit(); break;
