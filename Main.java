@@ -1,160 +1,115 @@
 import java.util.Scanner;
 
-class Account {
-    int accountNumber;
+class Student {
+    String rollNo;
     String name;
-    double balance;
-    String email;
-    String phone;
+    String course;
+    double marks;
+    String grade;
 
-    Account(int accountNumber, String name, double balance, String email, String phone) {
-        this.accountNumber = accountNumber;
-        this.name = name;
-        this.balance = balance;
-        this.email = email;
-        this.phone = phone;
+    Scanner sc = new Scanner(System.in);
+
+    public void inputStudent() {
+        System.out.print("Enter Roll Number: ");
+        rollNo = sc.nextLine();
+        System.out.print("Enter Name: ");
+        name = sc.nextLine();
+        System.out.print("Enter Course: ");
+        course = sc.nextLine();
+        System.out.print("Enter Marks: ");
+        marks = sc.nextDouble();
+        sc.nextLine();  // consume leftover newline
+        calculateGrade();
     }
 
-    void deposit(double amount) {
-        if (amount > 0) {
-            balance += amount;
-            System.out.println("Deposited.");
-        } else {
-            System.out.println("Invalid Amount.");
-        }
+    public void calculateGrade() {
+        if (marks >= 90) grade = "A+";
+        else if (marks >= 80) grade = "A";
+        else if (marks >= 70) grade = "B";
+        else if (marks >= 60) grade = "C";
+        else if (marks >= 50) grade = "D";
+        else grade = "F";
     }
 
-    void withdraw(double amount) {
-        if (amount <= balance) {
-            balance -= amount;
-            System.out.println("Withdrawn.");
-        } else {
-            System.out.println("Insufficient Balance.");
-        }
-    }
-
-    void display() {
-        System.out.println("Account No: " + accountNumber);
+    public void displayStudent() {
+        System.out.println("Roll No: " + rollNo);
         System.out.println("Name: " + name);
-        System.out.println("Balance: " + balance);
-        System.out.println("Email: " + email);
-        System.out.println("Phone: " + phone); 
-    }
-
-    void updateContact(String email, String phone) {
-        this.email = email;
-        this.phone = phone;
+        System.out.println("Course: " + course);
+        System.out.println("Marks: " + marks);
+        System.out.println("Grade: " + grade);
+        System.out.println("---------------------------");
     }
 }
 
-public class main {
-    static Account[] accounts = new Account[100];
-    static int count = 0;
-    static int nextAccNo = 1001;
-    static Scanner sc = new Scanner(System.in);
+class StudentManagementSystem {
+    Student[] students;
+    int studentCount;
 
-    static int find(int accNo) {
-        for (int i = 0; i < count; i++) {
-            if (accounts[i].accountNumber == accNo) return i;
+    public void initializeSystem(int size) {
+        students = new Student[size];
+        studentCount = 0;
+    }
+
+    public void addStudent() {
+        if (studentCount >= students.length) {
+            System.out.println("Cannot add more students. The system is full!");
+            return;
         }
-        return -1;
+        Student s = new Student();
+        s.inputStudent();
+        students[studentCount] = s;
+        studentCount++;
+        System.out.println("Student added successfully!\n");
     }
 
-    static void createAccount() {
-        System.out.print("Enter Name: ");
-        String name = sc.nextLine();
-
-        System.out.print("Enter Initial Deposit: ");
-        double bal = sc.nextDouble(); sc.nextLine();
-
-        System.out.print("Enter Email: ");
-        String email = sc.nextLine();
-
-        System.out.print("Enter Phone: ");
-        String phone = sc.nextLine();
-
-        accounts[count++] = new Account(nextAccNo, name, bal, email, phone);
-        System.out.println("Account Created. Number: " + nextAccNo);
-        nextAccNo++;
-    }
-
-    static void deposit() { 
-        System.out.print("Enter Account No: ");
-        int accNo = sc.nextInt(); sc.nextLine();
-        int i = find(accNo);
-
-        if (i != -1) {
-            System.out.print("Enter Amount: ");
-            double amt = sc.nextDouble(); sc.nextLine();
-            accounts[i].deposit(amt);
-        } else {
-            System.out.println("Not Found.");
+    public void displayAllStudents() {
+        if (studentCount == 0) {
+            System.out.println("No student records available!\n");
+            return;
+        }
+        System.out.println("======= Student Records =======");
+        for (int i = 0; i < studentCount; i++) {
+            students[i].displayStudent();
         }
     }
- 
-    static void withdraw() { 
-        System.out.print("Enter Account No: ");
-        int accNo = sc.nextInt(); sc.nextLine();
-        int i = find(accNo);
+}
 
-        if (i != -1) {
-            System.out.print("Enter Amount: ");
-            double amt = sc.nextDouble(); sc.nextLine();
-            accounts[i].withdraw(amt);
-        } else {
-            System.out.println("Not Found.");
-        }
-    }
-
-    static void show() {
-        System.out.print("Enter Account No: ");
-        int accNo = sc.nextInt(); sc.nextLine();
-        int i = find(accNo);
-
-        if (i != -1) {
-            accounts[i].display();
-        } else {
-            System.out.println("Not Found.");
-        }
-    }
-
-    static void update() {
-        System.out.print("Enter Account No: ");
-        int accNo = sc.nextInt(); sc.nextLine();
-        int i = find(accNo);
-        
-        if (i != -1) {
-            System.out.print("Enter New Email: ");
-            String email = sc.nextLine();
-            System.out.print("Enter New Phone: ");
-            String phone = sc.nextLine();
-            accounts[i].updateContact(email, phone);
-            System.out.println("Updated.");
-        } else {
-            System.out.println("Not Found.");
-        }
-    }
-
+public class Main {
     public static void main(String[] args) {
-        while (true) {
-            System.out.println("\n1. Create Account");
-            System.out.println("2. Deposit");
-            System.out.println("3. Withdraw");
-            System.out.println("4. Show Account");
-            System.out.println("5. Update Contact");
-            System.out.println("6. Exit");
-            System.out.print("Choice: ");
-            int ch = sc.nextInt(); sc.nextLine();
+        Scanner sc = new Scanner(System.in);
+        StudentManagementSystem sms = new StudentManagementSystem();
 
-            switch (ch) {
-                case 1: createAccount(); break;
-                case 2: deposit(); break;
-                case 3: withdraw(); break;
-                case 4: show(); break;
-                case 5: update(); break;
-                case 6: return;
-                default: System.out.println("Invalid Choice");
+        System.out.print("Enter the maximum number of students: ");
+        int size = sc.nextInt();
+        sc.nextLine();  // consume newline
+
+        sms.initializeSystem(size);
+
+        int choice;
+        do {
+            System.out.println("\n===== Student Record Management System =====");
+            System.out.println("1. Add Student");
+            System.out.println("2. Display All Students");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1:
+                    sms.addStudent();
+                    break;
+                case 2:
+                    sms.displayAllStudents();
+                    break;
+                case 3:
+                    System.out.println("Exiting the program. Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
             }
-        }
+        } while (choice != 3);
+
+        sc.close();
     }
 }
